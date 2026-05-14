@@ -12,7 +12,7 @@ const PORTFOLIO_DATA = {
     location: "Tallahassee, FL - Open to Relocate",
     github: "https://github.com/devjothish",
     linkedin: "https://linkedin.com/in/jothiswaran",
-    bio: `I've spent the last 4+ years at RevStar turning client problems into working AI systems. Healthcare claims processing, video analysis at scale, agents that talk to databases so people don't have to write SQL - that kind of thing. 25+ engagements across healthcare, fintech, and logistics. I also have 13 cloud certs (6 AWS, 7 GCP) because I like understanding what's running under my code.`,
+    bio: `I've spent the last 4+ years at RevStar turning client problems into working AI systems. Healthcare claims processing, video analysis at scale, agents that talk to databases so people don't have to write SQL - that kind of thing. 35+ engagements across healthcare, fintech, and logistics. I'm also an AWS Golden Jacket holder with 20 cloud certs (13 AWS + 7 GCP) because I like understanding what's running under my code.`,
     cta: `I'm looking for my next AI Engineering role. If your team is working on AI and you need someone who's shipped real systems to real users, I'd love to hear about it.`,
   },
 
@@ -204,16 +204,31 @@ const PORTFOLIO_DATA = {
   certifications: {
     AWS: [
       {
+        name: "GenAI Developer Professional",
+        short: "GenAI Pro",
+        tier: "professional",
+      },
+      {
         name: "Solutions Architect Professional",
         short: "SA Pro",
         tier: "professional",
       },
       {
-        name: "GenAI Developer Professional",
-        short: "GenAI Pro",
+        name: "DevOps Engineer Professional",
+        short: "DevOps Pro",
         tier: "professional",
       },
+      {
+        name: "Advanced Networking Specialty",
+        short: "Networking Spec",
+        tier: "specialty",
+      },
       { name: "ML Specialty", short: "ML Spec", tier: "specialty" },
+      {
+        name: "Security Specialty",
+        short: "Security Spec",
+        tier: "specialty",
+      },
       {
         name: "Developer Associate",
         short: "Dev Assoc",
@@ -228,6 +243,26 @@ const PORTFOLIO_DATA = {
         name: "Data Engineer Associate",
         short: "DE Assoc",
         tier: "associate",
+      },
+      {
+        name: "Solutions Architect Associate",
+        short: "SA Assoc",
+        tier: "associate",
+      },
+      {
+        name: "CloudOps Engineer Associate",
+        short: "CloudOps Assoc",
+        tier: "associate",
+      },
+      {
+        name: "AI Practitioner",
+        short: "AI Practitioner",
+        tier: "foundational",
+      },
+      {
+        name: "Cloud Practitioner",
+        short: "Cloud Practitioner",
+        tier: "foundational",
       },
     ],
     GCP: [
@@ -276,7 +311,7 @@ const PORTFOLIO_DATA = {
       period: "Jun 2025 - Present",
       location: "Tampa, FL (Remote)",
       highlights: [
-        "Ran point on 25+ client engagements - scoping architectures, estimating AWS costs, and building the AI systems myself. RAG pipelines, agentic workflows, fine-tuning - whatever the client needed.",
+        "Ran point on 35+ client engagements - scoping architectures, estimating AWS costs, and building the AI systems myself. RAG pipelines, agentic workflows, fine-tuning - whatever the client needed.",
         "Built an 8-step healthcare claims pipeline where agents handle everything from intake to adjudication. Strands Agents SDK, Bedrock AgentCore, deployed on ECS Fargate.",
         "Took video processing from $0.37/video down to $0.005 (72x cheaper) by building a multimodal pipeline with Nova Pro. Processed 3,867 brand videos and fine-tuned Llama 3.1 8B on 8x A100s.",
         "Latency was 8.3 seconds per transaction - way too slow. Added dual-namespace long-term memory so the agent remembers past work. Got it down to 1.2s and cut costs by 93%.",
