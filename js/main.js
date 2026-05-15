@@ -59,11 +59,11 @@ function renderAbout() {
       </div>
       <div class="about-stats">
         <div class="stat-card">
-          <div class="stat-number" data-value="30" data-suffix="+">0</div>
+          <div class="stat-number" data-value="35" data-suffix="+">0</div>
           <div class="stat-label">Production AI Systems</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number" data-value="13" data-suffix="">0</div>
+          <div class="stat-number" data-value="20" data-suffix="">0</div>
           <div class="stat-label">Cloud Certifications</div>
         </div>
         <div class="stat-card">
