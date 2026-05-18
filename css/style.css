@@ -2547,3 +2547,247 @@ a:hover {
   .ed-exp { grid-template-columns: 1fr; gap: 1.25rem; padding: 2.25rem 0; }
   .ed-exp-aside { flex-direction: row; gap: 1rem; align-items: baseline; padding-top: 0; }
 }
+
+/* ============================================================
+   EDITORIAL — Contact
+   ============================================================ */
+
+#contact {
+  padding: 9rem 3rem 6rem;
+  background: none;
+  min-height: auto;
+}
+#contact .section-inner { max-width: 1100px; }
+
+.ed-contact-grid {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
+}
+.ed-contact-row {
+  display: grid;
+  grid-template-columns: 130px 1fr auto auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  text-decoration: none;
+  color: inherit;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: edFadeUp 0.7s ease forwards;
+  animation-delay: var(--ed-contact-delay, 0ms);
+  transition: padding-left 0.4s cubic-bezier(0.2,0.85,0.3,1), background 0.3s ease;
+  position: relative;
+}
+.ed-contact-row::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold), var(--gold-deep));
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.45s cubic-bezier(0.2,0.85,0.3,1);
+}
+.ed-contact-row:hover {
+  padding-left: 1.5rem;
+  background: linear-gradient(90deg, rgba(212,175,55,0.04), transparent);
+}
+.ed-contact-row:hover::before { transform: scaleY(1); }
+.ed-contact-key {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.ed-contact-rule {
+  height: 1px;
+  background: rgba(212, 175, 55, 0.15);
+  align-self: center;
+}
+.ed-contact-val {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  color: var(--text-bright);
+  letter-spacing: -0.005em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  transition: color 0.3s ease;
+}
+.ed-contact-row:hover .ed-contact-val {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold) 70%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.ed-contact-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 0.85rem;
+  transition: transform 0.5s cubic-bezier(0.2,0.85,0.3,1.1), background 0.3s ease, color 0.3s ease;
+}
+.ed-contact-row:hover .ed-contact-arrow {
+  background: var(--gold);
+  color: var(--darker);
+  border-color: var(--gold);
+  transform: scale(1.1) rotate(45deg);
+}
+
+.ed-contact-foot {
+  margin-top: 4rem;
+}
+.ed-contact-foot-rule {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212,175,55,0.4), rgba(255,255,255,0.04), rgba(212,175,55,0.4));
+  margin-bottom: 1.5rem;
+}
+.ed-contact-foot-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.ed-contact-foot-sig {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  color: var(--gold-light);
+  text-transform: none;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+.ed-contact-foot-mark { color: rgba(212,175,55,0.4); }
+
+@media (max-width: 720px) {
+  #contact { padding: 6rem 1.5rem 4rem; }
+  .ed-contact-row { grid-template-columns: auto 1fr auto; padding: 1.2rem 0.25rem; gap: 1rem; }
+  .ed-contact-rule { display: none; }
+  .ed-contact-val { font-size: 1rem; }
+}
+
+/* ============================================================
+   EDITORIAL — Navigation + Loader
+   ============================================================ */
+
+/* Nav: refined editorial bar */
+.nav {
+  padding: 1.5rem 3rem;
+  background: linear-gradient(180deg, rgba(5,5,8,0.85) 0%, rgba(5,5,8,0) 100%);
+  backdrop-filter: blur(8px);
+}
+.nav.scrolled {
+  background: rgba(5, 5, 8, 0.92);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  padding: 0.9rem 3rem;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold) 70%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  line-height: 1;
+}
+.nav-links { gap: 2.5rem; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  position: relative;
+  padding: 0.25rem 0;
+  transition: color 0.3s ease;
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.4s cubic-bezier(0.2,0.85,0.3,1);
+}
+.nav-links a:hover,
+.nav-links a.active { color: var(--gold-light); }
+.nav-links a:hover::after,
+.nav-links a.active::after { width: 100%; }
+
+/* Loader: editorial mark */
+.loader {
+  background: var(--darker);
+}
+.loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.loader-ring {
+  width: 64px;
+  height: 64px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: loaderSpin 1.4s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  position: relative;
+}
+.loader-ring::before {
+  content: "J";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.7rem;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold) 70%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  animation: loaderSpinReverse 1.4s linear infinite;
+}
+.loader-text {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  opacity: 0.7;
+}
+@keyframes loaderSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes loaderSpinReverse {
+  to { transform: rotate(-360deg); }
+}
+
+/* Three.js canvas: turn down to a whisper for editorial feel */
+#three-canvas {
+  opacity: 0.45;
+  filter: blur(0.3px);
+}

@@ -1,8 +1,11 @@
 // ============================================
-// THREE-SCENE.JS - Neural Network 3D Visualization
+// THREE-SCENE.JS - Editorial gold-dust ambient drift
+// Replaces the cyan/purple neural network with a quiet,
+// drifting field of gold motes. Sets the mood without
+// competing with the editorial typography.
 // ============================================
 
-class NeuralNetworkScene {
+class EditorialDustScene {
   constructor() {
     this.isMobile =
       /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
@@ -10,36 +13,21 @@ class NeuralNetworkScene {
     this.mouse = { x: 0, y: 0 };
     this.targetMouse = { x: 0, y: 0 };
     this.scrollY = 0;
-    this.nodes = [];
-    this.edges = [];
-    this.particles = [];
     this.clock = new THREE.Clock();
-    this.raycaster = new THREE.Raycaster();
-    this.mouseVec = new THREE.Vector2();
-    this.hoveredNode = null;
-
     this.init();
-    this.createNetwork();
-    this.createParticles();
+    this.createDust();
+    this.createGlow();
     this.animate();
     this.addListeners();
   }
 
   init() {
-    // Scene
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x050508, 0.035);
-
-    // Camera
+    this.scene.fog = new THREE.FogExp2(0x050402, 0.018);
     this.camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
+      55, window.innerWidth / window.innerHeight, 0.1, 120
     );
-    this.camera.position.z = 30;
-
-    // Renderer
+    this.camera.position.z = 35;
     this.renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById("three-canvas"),
       antialias: !this.isMobile,
@@ -48,189 +36,91 @@ class NeuralNetworkScene {
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setClearColor(0x050508, 1);
+    this.renderer.setClearColor(0x050402, 0);
   }
 
-  createNetwork() {
-    const nodeCount = this.isMobile ? 40 : 80;
-    const spread = this.isMobile ? 20 : 30;
-    const nodeGeometry = new THREE.SphereGeometry(0.15, 12, 12);
-
-    // Create nodes
-    for (let i = 0; i < nodeCount; i++) {
-      const material = new THREE.MeshBasicMaterial({
-        color: new THREE.Color().lerpColors(
-          new THREE.Color(0xd4af37),
-          new THREE.Color(0x8a6f24),
-          Math.random()
-        ),
-        transparent: true,
-        opacity: 0.4 + Math.random() * 0.4,
-      });
-
-      const mesh = new THREE.Mesh(nodeGeometry, material);
-      mesh.position.set(
-        (Math.random() - 0.5) * spread,
-        (Math.random() - 0.5) * spread * 0.6,
-        (Math.random() - 0.5) * spread * 0.5
-      );
-
-      mesh.userData = {
-        basePos: mesh.position.clone(),
-        speed: 0.2 + Math.random() * 0.5,
-        phase: Math.random() * Math.PI * 2,
-        baseOpacity: material.opacity,
-        pulseSpeed: 0.5 + Math.random() * 2,
-      };
-
-      this.scene.add(mesh);
-      this.nodes.push(mesh);
-    }
-
-    // Create edges between nearby nodes
-    const maxDist = this.isMobile ? 6 : 5;
-    const edgeMaterial = new THREE.LineBasicMaterial({
-      color: 0xd4af37,
-      transparent: true,
-      opacity: 0.06,
-    });
-
-    for (let i = 0; i < this.nodes.length; i++) {
-      for (let j = i + 1; j < this.nodes.length; j++) {
-        const dist = this.nodes[i].position.distanceTo(
-          this.nodes[j].position
-        );
-        if (dist < maxDist) {
-          const geometry = new THREE.BufferGeometry().setFromPoints([
-            this.nodes[i].position,
-            this.nodes[j].position,
-          ]);
-          const line = new THREE.Line(geometry, edgeMaterial.clone());
-          line.userData = {
-            nodeA: i,
-            nodeB: j,
-            baseDist: dist,
-            maxDist: maxDist,
-          };
-          this.scene.add(line);
-          this.edges.push(line);
-        }
+  createDust() {
+    this.layers = [];
+    const LAYERS = this.isMobile ? 2 : 3;
+    const PER_LAYER = this.isMobile ? 180 : 320;
+    const gold = [
+      new THREE.Color(0xf9e088),
+      new THREE.Color(0xd4af37),
+      new THREE.Color(0x8a6f24),
+    ];
+    for (let l = 0; l < LAYERS; l++) {
+      const geom = new THREE.BufferGeometry();
+      const positions = new Float32Array(PER_LAYER * 3);
+      const colors = new Float32Array(PER_LAYER * 3);
+      const seeds = new Float32Array(PER_LAYER);
+      const depth = -8 + l * 12;
+      const spread = 70 + l * 8;
+      for (let i = 0; i < PER_LAYER; i++) {
+        positions[i * 3]     = (Math.random() - 0.5) * spread;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * spread * 0.85;
+        positions[i * 3 + 2] = depth + (Math.random() - 0.5) * 6;
+        const c = gold[Math.floor(Math.random() * gold.length)];
+        colors[i * 3] = c.r;
+        colors[i * 3 + 1] = c.g;
+        colors[i * 3 + 2] = c.b;
+        seeds[i] = Math.random() * Math.PI * 2;
       }
+      geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geom.setAttribute("color",    new THREE.BufferAttribute(colors, 3));
+      geom.setAttribute("seed",     new THREE.BufferAttribute(seeds, 1));
+      const mat = new THREE.PointsMaterial({
+        size: 0.18 + l * 0.05,
+        sizeAttenuation: true,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.55 - l * 0.12,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const points = new THREE.Points(geom, mat);
+      points.userData = { speed: 0.04 + l * 0.025, drift: 0.18 + l * 0.08 };
+      this.scene.add(points);
+      this.layers.push(points);
     }
   }
 
-  createParticles() {
-    const count = this.isMobile ? 200 : 500;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    const sizes = new Float32Array(count);
-
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 50;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
-      sizes[i] = Math.random() * 2;
-    }
-
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(positions, 3)
-    );
-    geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
-
-    const material = new THREE.PointsMaterial({
-      color: 0xd4af37,
-      size: 0.08,
+  createGlow() {
+    const geom = new THREE.PlaneGeometry(180, 180);
+    const mat = new THREE.MeshBasicMaterial({
+      color: 0x1a1408,
       transparent: true,
-      opacity: 0.3,
-      sizeAttenuation: true,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.35,
+      depthWrite: false,
     });
-
-    this.particleSystem = new THREE.Points(geometry, material);
-    this.scene.add(this.particleSystem);
+    this.glow = new THREE.Mesh(geom, mat);
+    this.glow.position.z = -30;
+    this.scene.add(this.glow);
   }
 
   animate() {
-    requestAnimationFrame(() => this.animate());
-
-    const time = this.clock.getElapsedTime();
-    const delta = this.clock.getDelta();
-
-    // Smooth mouse interpolation
-    this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.05;
-    this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.05;
-
-    // Camera movement based on mouse
-    this.camera.position.x = this.mouse.x * 3;
-    this.camera.position.y = -this.mouse.y * 2 - this.scrollY * 0.005;
-    this.camera.lookAt(0, -this.scrollY * 0.003, 0);
-
-    // Animate nodes
-    for (const node of this.nodes) {
-      const ud = node.userData;
-      node.position.x =
-        ud.basePos.x + Math.sin(time * ud.speed + ud.phase) * 0.5;
-      node.position.y =
-        ud.basePos.y + Math.cos(time * ud.speed * 0.7 + ud.phase) * 0.3;
-      node.position.z =
-        ud.basePos.z + Math.sin(time * ud.speed * 0.5 + ud.phase * 2) * 0.2;
-
-      // Pulse opacity
-      node.material.opacity =
-        ud.baseOpacity *
-        (0.7 + 0.3 * Math.sin(time * ud.pulseSpeed + ud.phase));
-    }
-
-    // Update edges
-    for (const edge of this.edges) {
-      const { nodeA, nodeB, maxDist } = edge.userData;
-      const posA = this.nodes[nodeA].position;
-      const posB = this.nodes[nodeB].position;
-      const dist = posA.distanceTo(posB);
-
-      // Update positions
-      const positions = edge.geometry.attributes.position.array;
-      positions[0] = posA.x;
-      positions[1] = posA.y;
-      positions[2] = posA.z;
-      positions[3] = posB.x;
-      positions[4] = posB.y;
-      positions[5] = posB.z;
-      edge.geometry.attributes.position.needsUpdate = true;
-
-      // Fade based on distance
-      edge.material.opacity = Math.max(0, 0.08 * (1 - dist / maxDist));
-    }
-
-    // Rotate particles
-    if (this.particleSystem) {
-      this.particleSystem.rotation.y = time * 0.02;
-      this.particleSystem.rotation.x = time * 0.01;
-    }
-
-    // Mouse interaction - brighten nearby nodes
-    if (!this.isMobile) {
-      this.raycaster.setFromCamera(this.mouseVec, this.camera);
-      for (const node of this.nodes) {
-        const screenPos = node.position.clone().project(this.camera);
-        const dx = screenPos.x - this.mouseVec.x;
-        const dy = screenPos.y - this.mouseVec.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 0.3) {
-          const factor = 1 - dist / 0.3;
-          node.material.opacity = Math.min(
-            1,
-            node.userData.baseOpacity + factor * 0.6
-          );
-          node.scale.setScalar(1 + factor * 0.8);
-        } else {
-          node.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+    requestAnimationFrame(this.animate.bind(this));
+    const t = this.clock.getElapsedTime();
+    this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.04;
+    this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.04;
+    this.layers.forEach((layer, idx) => {
+      const pos = layer.geometry.attributes.position;
+      const seeds = layer.geometry.attributes.seed;
+      const speed = layer.userData.speed;
+      const drift = layer.userData.drift;
+      for (let i = 0; i < pos.count; i++) {
+        const seed = seeds.array[i];
+        pos.array[i * 3 + 1] += speed * 0.012;
+        pos.array[i * 3] += Math.sin(t * 0.4 + seed) * 0.0035 * drift;
+        if (pos.array[i * 3 + 1] > 36) {
+          pos.array[i * 3 + 1] = -36;
+          pos.array[i * 3] = (Math.random() - 0.5) * (70 + idx * 8);
         }
       }
-    }
-
+      pos.needsUpdate = true;
+      layer.position.x = this.mouse.x * (0.6 + idx * 0.3);
+      layer.position.y = -this.scrollY * 0.0008 * (1 + idx * 0.3);
+    });
+    this.camera.position.z = 35 + Math.sin(t * 0.18) * 0.6;
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -240,38 +130,20 @@ class NeuralNetworkScene {
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
     });
-
     window.addEventListener("mousemove", (e) => {
-      this.targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      this.targetMouse.y = (e.clientY / window.innerHeight) * 2 - 1;
-      this.mouseVec.x = this.targetMouse.x;
-      this.mouseVec.y = -this.targetMouse.y;
+      this.targetMouse.x = (e.clientX / window.innerWidth - 0.5) * 4;
+      this.targetMouse.y = -(e.clientY / window.innerHeight - 0.5) * 4;
     });
-
     window.addEventListener("scroll", () => {
       this.scrollY = window.scrollY;
-    });
-  }
-
-  dispose() {
-    this.renderer.dispose();
-    for (const node of this.nodes) {
-      node.geometry.dispose();
-      node.material.dispose();
-    }
-    for (const edge of this.edges) {
-      edge.geometry.dispose();
-      edge.material.dispose();
-    }
-    if (this.particleSystem) {
-      this.particleSystem.geometry.dispose();
-      this.particleSystem.material.dispose();
-    }
+    }, { passive: true });
   }
 }
 
-// Initialize on load
-let neuralScene;
 function initThreeScene() {
-  neuralScene = new NeuralNetworkScene();
+  if (typeof THREE === "undefined") return;
+  new EditorialDustScene();
 }
+
+// preserve old name in case anything still references it
+const NeuralNetworkScene = EditorialDustScene;
