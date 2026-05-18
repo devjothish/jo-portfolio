@@ -3,12 +3,12 @@
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Render all sections ---
+  // --- Render all sections (About removed: hero now covers bio + stats) ---
+  // Render order matches DOM order: hero, certifications, projects, skills, experience, contact.
   renderHero();
-  renderAbout();
+  renderCertifications();
   renderProjects();
   renderSkills();
-  renderCertifications();
   renderExperience();
   renderContact();
 
