@@ -27,21 +27,70 @@ document.addEventListener("DOMContentLoaded", () => {
 // ============ RENDER FUNCTIONS ============
 
 function renderHero() {
-  const d = PORTFOLIO_DATA.personal;
   document.getElementById("hero").innerHTML = `
-    <div class="hero-content">
-      <p class="hero-greeting">Hello, I'm</p>
-      <h1 class="hero-name">${d.name}</h1>
-      <p class="hero-title">${d.title}</p>
-      <p class="hero-tagline">${d.tagline}</p>
-      <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">View My Work</a>
-        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    <div class="hero-frame">
+      <!-- Top status strip -->
+      <header class="hero-strip">
+        <div class="hero-strip-rule"></div>
+        <div class="hero-strip-items">
+          <span class="hero-strip-now"><span class="hero-strip-dot"></span>Open to work</span>
+          <span class="hero-strip-sep">·</span>
+          <span class="hero-strip-role">AI Engineer · Tampa, FL · Remote</span>
+        </div>
+        <div class="hero-strip-rule"></div>
+      </header>
+
+      <!-- Editorial centerpiece -->
+      <div class="hero-stage">
+        <p class="hero-kicker">Portfolio · MMXXVI</p>
+
+        <h1 class="hero-display">
+          <span class="hero-line hero-line-1">I ship</span>
+          <span class="hero-line hero-line-2"><em>agentic AI</em></span>
+          <span class="hero-line hero-line-3">that survives contact</span>
+          <span class="hero-line hero-line-4">with real users.</span>
+        </h1>
+
+        <div class="hero-sig">
+          <span class="hero-sig-name">Jothiswaran Arumugam</span>
+          <span class="hero-sig-divide"></span>
+          <span class="hero-sig-role">Data &amp; AI Engineer · RevStar Consulting</span>
+        </div>
+
+        <p class="hero-body">
+          Four years turning enterprise problems into working systems — healthcare claims pipelines, multimodal video at scale, agents that talk to databases. <span class="hero-body-gold">AWS Golden Jacket holder</span> with 13× AWS plus 7× GCP, all active.
+        </p>
+
+        <nav class="hero-actions">
+          <a class="hero-action" href="#projects">
+            <span class="hero-action-arrow">↓</span>
+            <span class="hero-action-text">See the work</span>
+            <span class="hero-action-rule"></span>
+          </a>
+          <a class="hero-action" href="#contact">
+            <span class="hero-action-arrow">↗</span>
+            <span class="hero-action-text">Write to me</span>
+            <span class="hero-action-rule"></span>
+          </a>
+          <a class="hero-action hero-action-quiet" href="https://www.credly.com/users/jothiswaranarumugam" target="_blank" rel="noopener">
+            <span class="hero-action-arrow">★</span>
+            <span class="hero-action-text">View credentials</span>
+            <span class="hero-action-rule"></span>
+          </a>
+        </nav>
       </div>
-    </div>
-    <div class="hero-scroll-indicator">
-      <div class="scroll-line"></div>
-      <span class="scroll-text">Scroll</span>
+
+      <!-- Bottom proof strip -->
+      <footer class="hero-proof">
+        <div class="hero-proof-rule"></div>
+        <ul class="hero-proof-list">
+          <li><span class="hero-proof-num">35<i>+</i></span><span class="hero-proof-cap">Engagements</span></li>
+          <li><span class="hero-proof-num">13<i>×</i></span><span class="hero-proof-cap">AWS · Golden Jacket</span></li>
+          <li><span class="hero-proof-num">7<i>×</i></span><span class="hero-proof-cap">Google Cloud</span></li>
+          <li><span class="hero-proof-num">93<i>%</i></span><span class="hero-proof-cap">Max cost reduction</span></li>
+          <li><span class="hero-proof-num">4<i>+</i></span><span class="hero-proof-cap">Years shipping production AI</span></li>
+        </ul>
+      </footer>
     </div>
   `;
 }
@@ -334,7 +383,7 @@ function renderCertifications() {
       </div>
 
       <div class="jacket-context">
-        <div class="jacket-eyebrow">— A R A R E   A C H I E V E M E N T</div>
+        <div class="jacket-eyebrow">— A Rare Achievement</div>
         <h3 class="jacket-title">${certs.goldenJacket.title}</h3>
         <p class="jacket-body">${certs.goldenJacket.caption}</p>
 
