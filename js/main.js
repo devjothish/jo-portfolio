@@ -132,49 +132,45 @@ function renderProjects() {
   const projects = PORTFOLIO_DATA.projects;
   const container = document.querySelector("#projects .section-inner");
 
-  const projectIcons = {
-    mesh: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="5" y1="19" x2="19" y2="19"/></svg>',
-    video: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>',
-    transaction: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-    sql: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
-    data: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
-    voice: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
-  };
-
-  const cardsHtml = projects
-    .map(
-      (p) => `
-    <div class="project-card" style="--project-color: ${p.color}">
-      <div class="project-header">
-        <div class="project-icon" style="color: ${p.color}">${projectIcons[p.icon] || ""}</div>
-        <div class="project-impact">Impact ${p.impact}/100</div>
-      </div>
-      <h3 class="project-name">${p.name}</h3>
-      <p class="project-desc">${p.description}</p>
-      <div class="project-tech">
-        ${p.tech.map((t) => `<span class="tech-tag">${t}</span>`).join("")}
-      </div>
-      <div class="project-metrics">
-        ${p.metrics
-          .map(
-            (m) => `
-          <div class="metric">
-            <div class="metric-value" data-value="${m.value}" data-suffix="${m.suffix}">0</div>
-            <div class="metric-label">${m.label}</div>
+  const studiesHtml = projects
+    .map((p, i) => `
+      <article class="study" style="--study-delay:${i * 80}ms">
+        <div class="study-rail">
+          <div class="study-num">${String(i + 1).padStart(2, "0")}</div>
+          <div class="study-rail-line"></div>
+          <div class="study-rail-tag">CASE</div>
+        </div>
+        <div class="study-body">
+          <h3 class="study-name">${p.name}</h3>
+          <p class="study-desc">${p.description}</p>
+          <div class="study-meta">
+            <div class="study-meta-row">
+              <span class="study-meta-key">Stack</span>
+              <span class="study-meta-val">${p.tech.join(" · ")}</span>
+            </div>
+            <div class="study-meta-row study-meta-row-metrics">
+              <span class="study-meta-key">Impact</span>
+              <span class="study-meta-val">
+                ${p.metrics.map(m => `<span class="study-metric"><i class="study-metric-num">${m.value}${m.suffix}</i> <i class="study-metric-cap">${m.label}</i></span>`).join('<span class="study-metric-sep">·</span>')}
+              </span>
+            </div>
           </div>
-        `
-          )
-          .join("")}
-      </div>
-    </div>
-  `
-    )
+        </div>
+      </article>
+    `)
     .join("");
 
   container.innerHTML = `
-    <div class="section-label">Work</div>
-    <div class="section-title">Things I've <span class="gradient-text">built and shipped</span></div>
-    <div class="projects-grid">${cardsHtml}</div>
+    <header class="ed-section-head">
+      <div class="ed-eyebrow">
+        <span class="ed-eyebrow-line"></span>
+        <span class="ed-eyebrow-text">Selected work · ${projects.length} case studies</span>
+      </div>
+      <h2 class="ed-headline">
+        Things I <em>actually</em><br>shipped to production.
+      </h2>
+    </header>
+    <div class="studies">${studiesHtml}</div>
   `;
 }
 
@@ -182,45 +178,35 @@ function renderSkills() {
   const skills = PORTFOLIO_DATA.skills;
   const container = document.querySelector("#skills .section-inner");
 
-  const categoryIcons = {
-    "AI / ML": '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
-    Cloud: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
-    Backend: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-    Frontend: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
-  };
-
-  const categoriesHtml = Object.entries(skills)
-    .map(
-      ([category, items]) => `
-    <div class="skill-category">
-      <div class="category-header">
-        <div class="category-icon">${categoryIcons[category] || ""}</div>
-        <div class="category-name">${category}</div>
-      </div>
-      <div class="skill-list">
-        ${items
-          .map(
-            (s) => `
-          <div class="skill-item">
-            <span class="skill-name">${s.name}</span>
-            <div class="skill-bar-bg">
-              <div class="skill-bar-fill" data-level="${s.level}"></div>
-            </div>
-            <span class="skill-percent">${s.level}%</span>
+  const blocks = Object.entries(skills)
+    .map(([category, items], i) => {
+      const names = items.map(s => `<span class="stack-item">${s.name}</span>`).join('<span class="stack-sep">·</span>');
+      return `
+        <div class="stack-block" style="--stack-delay:${i * 100}ms">
+          <div class="stack-head">
+            <span class="stack-num">${String(i + 1).padStart(2, "0")}</span>
+            <span class="stack-title">${category}</span>
+            <span class="stack-rule"></span>
+            <span class="stack-count">${items.length}</span>
           </div>
-        `
-          )
-          .join("")}
-      </div>
-    </div>
-  `
-    )
+          <div class="stack-list">${names}</div>
+        </div>
+      `;
+    })
     .join("");
 
   container.innerHTML = `
-    <div class="section-label">Skills</div>
-    <div class="section-title">Technology <span class="gradient-text">Stack</span></div>
-    <div class="skills-container">${categoriesHtml}</div>
+    <header class="ed-section-head">
+      <div class="ed-eyebrow">
+        <span class="ed-eyebrow-line"></span>
+        <span class="ed-eyebrow-text">The Stack · Production tools</span>
+      </div>
+      <h2 class="ed-headline">
+        Tools I use to <em>actually</em><br>ship the work.
+      </h2>
+      <p class="ed-subhead">A working stack, not a wish list. Everything below has shipped to production at least once.</p>
+    </header>
+    <div class="stack">${blocks}</div>
   `;
 }
 
@@ -452,36 +438,47 @@ function renderExperience() {
   const edu = PORTFOLIO_DATA.education;
   const container = document.querySelector("#experience .section-inner");
 
-  const timelineHtml = exp
-    .map(
-      (e) => `
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-header">
-        <div class="timeline-role">${e.role}</div>
-        <div class="timeline-company">${e.company}</div>
-        <div class="timeline-meta">
-          <span>${e.period}</span>
-          <span>${e.location}</span>
+  const items = exp
+    .map((e, i) => `
+      <article class="ed-exp" style="--ed-exp-delay:${i * 80}ms">
+        <aside class="ed-exp-aside">
+          <div class="ed-exp-period">${e.period}</div>
+          <div class="ed-exp-loc">${e.location}</div>
+        </aside>
+        <div class="ed-exp-body">
+          <h3 class="ed-exp-role">${e.role}</h3>
+          <div class="ed-exp-company">${e.company}</div>
+          <ul class="ed-exp-highlights">
+            ${e.highlights.map(h => `<li>${h}</li>`).join("")}
+          </ul>
         </div>
+      </article>
+    `).join("");
+
+  const eduHtml = edu ? `
+    <article class="ed-exp ed-exp--edu" style="--ed-exp-delay:${exp.length * 80}ms">
+      <aside class="ed-exp-aside">
+        <div class="ed-exp-period">${edu.period || ""}</div>
+        <div class="ed-exp-loc">${edu.location || ""}</div>
+      </aside>
+      <div class="ed-exp-body">
+        <h3 class="ed-exp-role">${edu.degree || edu.name || "Education"}</h3>
+        <div class="ed-exp-company">${edu.school || ""}${edu.gpa ? ` · GPA ${edu.gpa}` : ""}</div>
       </div>
-      <ul class="timeline-highlights">
-        ${e.highlights.map((h) => `<li>${h}</li>`).join("")}
-      </ul>
-    </div>
-  `
-    )
-    .join("");
+    </article>
+  ` : "";
 
   container.innerHTML = `
-    <div class="section-label">Journey</div>
-    <div class="section-title">Experience & <span class="gradient-text">Education</span></div>
-    <div class="timeline">${timelineHtml}</div>
-    <div class="education-card">
-      <div class="education-degree">${edu.degree}</div>
-      <div class="education-school">${edu.school}</div>
-      <div class="education-meta">${edu.period} &middot; ${edu.location} &middot; GPA: ${edu.gpa}</div>
-    </div>
+    <header class="ed-section-head">
+      <div class="ed-eyebrow">
+        <span class="ed-eyebrow-line"></span>
+        <span class="ed-eyebrow-text">Career · ${exp.length} roles since 2021</span>
+      </div>
+      <h2 class="ed-headline">
+        Where I've been <em>building</em><br>before now.
+      </h2>
+    </header>
+    <div class="ed-exp-list">${items}${eduHtml}</div>
   `;
 }
 
