@@ -178,38 +178,222 @@ function renderSkills() {
 function renderCertifications() {
   const certs = PORTFOLIO_DATA.certifications;
   const container = document.querySelector("#certifications .section-inner");
+  const TIER_ORDER = ["professional", "specialty", "associate", "foundational"];
+  const TIER_LABELS = {
+    professional: "Professional",
+    specialty: "Specialty",
+    associate: "Associate",
+    foundational: "Foundational",
+  };
 
-  function renderCloud(provider, data, count) {
-    const isAws = provider === "AWS";
+  // Group AWS certs by tier
+  const awsByTier = {};
+  certs.AWS.forEach((c) => {
+    (awsByTier[c.tier] = awsByTier[c.tier] || []).push(c);
+  });
+
+  // ── Stamp medallion: large SVG centerpiece ───────────────────────
+  const goldenJacketSvg = `
+    <svg class="jacket-medal-svg" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="gjGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f9e088" stop-opacity="0.55"/>
+          <stop offset="60%" stop-color="#d4af37" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="gjRing" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f9e088"/>
+          <stop offset="40%" stop-color="#d4af37"/>
+          <stop offset="80%" stop-color="#8a6f24"/>
+          <stop offset="100%" stop-color="#f9e088"/>
+        </linearGradient>
+        <linearGradient id="gjText" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f9e088"/>
+          <stop offset="100%" stop-color="#c9a233"/>
+        </linearGradient>
+        <radialGradient id="gjBody" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stop-color="#221a08"/>
+          <stop offset="60%" stop-color="#0e0a04"/>
+          <stop offset="100%" stop-color="#050402"/>
+        </radialGradient>
+        <linearGradient id="gjShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#f9e088" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#fff5c2" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#f9e088" stop-opacity="0"/>
+        </linearGradient>
+        <path id="gjArcTop" d="M 80 210 A 130 130 0 0 1 340 210" fill="none"/>
+        <path id="gjArcBottom" d="M 80 210 A 130 130 0 0 0 340 210" fill="none"/>
+      </defs>
+
+      <!-- Ambient glow -->
+      <circle cx="210" cy="210" r="200" fill="url(#gjGlow)"/>
+
+      <!-- Decorative outer rings -->
+      <circle cx="210" cy="210" r="178" fill="none" stroke="url(#gjRing)" stroke-width="0.75" opacity="0.45"/>
+      <circle cx="210" cy="210" r="170" fill="none" stroke="url(#gjRing)" stroke-width="1.5"/>
+      <circle cx="210" cy="210" r="156" fill="none" stroke="url(#gjRing)" stroke-width="0.5" opacity="0.6"/>
+
+      <!-- Twelve hairline star marks (one per AWS cert tier slot) -->
+      <g class="jacket-stars" fill="url(#gjRing)">
+        ${Array.from({ length: 13 }).map((_, i) => {
+          const angle = (i / 13) * Math.PI * 2 - Math.PI / 2;
+          const cx = 210 + Math.cos(angle) * 163;
+          const cy = 210 + Math.sin(angle) * 163;
+          return `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="1.6"/>`;
+        }).join("")}
+      </g>
+
+      <!-- Inner medallion body -->
+      <circle cx="210" cy="210" r="138" fill="url(#gjBody)"/>
+      <circle cx="210" cy="210" r="138" fill="none" stroke="url(#gjRing)" stroke-width="1"/>
+
+      <!-- Inner concentric line -->
+      <circle cx="210" cy="210" r="118" fill="none" stroke="url(#gjRing)" stroke-width="0.5" opacity="0.55"/>
+
+      <!-- Top arc text: AWS GOLDEN JACKET -->
+      <text class="jacket-arc jacket-arc-top" fill="url(#gjText)">
+        <textPath href="#gjArcTop" startOffset="50%" text-anchor="middle">★  AWS  GOLDEN  JACKET  ★</textPath>
+      </text>
+
+      <!-- Center Roman numeral -->
+      <text x="210" y="232" text-anchor="middle" class="jacket-numeral" fill="url(#gjText)">XIII</text>
+
+      <!-- Subtext under numeral -->
+      <text x="210" y="262" text-anchor="middle" class="jacket-numeral-cap" fill="url(#gjText)">CERTIFICATIONS</text>
+
+      <!-- Bottom arc text: All Active · 2026 -->
+      <text class="jacket-arc jacket-arc-bottom" fill="url(#gjText)">
+        <textPath href="#gjArcBottom" startOffset="50%" text-anchor="middle">A L L · A C T I V E · M M X X V I</textPath>
+      </text>
+
+      <!-- Shimmer sweep -->
+      <circle cx="210" cy="210" r="170" fill="none" stroke="url(#gjShimmer)" stroke-width="2" class="jacket-shimmer"/>
+    </svg>
+  `;
+
+  // ── Tier wall rendering ──────────────────────────────────────────
+  const awsTierBlocks = TIER_ORDER.filter(t => awsByTier[t]).map((tier) => {
+    const items = awsByTier[tier];
+    const tierBadges = items
+      .map((c, idx) => `
+        <a class="trophy-badge trophy-badge--${tier}"
+           href="${certs.credlyProfile}"
+           target="_blank"
+           rel="noopener"
+           style="--badge-delay:${idx * 60}ms">
+          <div class="trophy-badge-shell">
+            <img class="trophy-badge-img" src="${c.image}" alt="AWS Certified ${c.name} ${c.suffix}" loading="lazy" decoding="async"/>
+          </div>
+          <div class="trophy-badge-meta">
+            <div class="trophy-badge-name">${c.name}</div>
+            <div class="trophy-badge-tier">${c.suffix}</div>
+          </div>
+        </a>
+      `).join("");
+
     return `
-      <div class="cert-cloud">
-        <div class="cert-cloud-header">
-          <div class="cert-cloud-logo ${isAws ? "aws" : "gcp"}">${provider}</div>
-          <div class="cert-cloud-title">Certifications</div>
-          <div class="cert-cloud-count">${count}x Certified</div>
+      <div class="tier-block tier-block--${tier}">
+        <div class="tier-rule">
+          <div class="tier-rule-label">${TIER_LABELS[tier]}</div>
+          <div class="tier-rule-line"></div>
+          <div class="tier-rule-count">${String(items.length).padStart(2, "0")}</div>
         </div>
-        <div class="certs-grid">
-          ${data
-            .map(
-              (c) => `
-            <div class="cert-badge ${isAws ? "aws" : "gcp"}">
-              <div class="cert-tier ${c.tier}">${c.tier}</div>
-              <div class="cert-name">${c.name}</div>
-            </div>
-          `
-            )
-            .join("")}
+        <div class="trophy-grid trophy-grid--${tier}">
+          ${tierBadges}
         </div>
       </div>
     `;
-  }
+  }).join("");
+
+  // ── GCP cert chips (no badge images) ─────────────────────────────
+  const gcpChips = certs.GCP.map((c, idx) => `
+    <div class="gcp-chip gcp-chip--${c.tier}" style="--chip-delay:${idx * 50}ms">
+      <span class="gcp-chip-dot"></span>
+      <span class="gcp-chip-name">${c.name}</span>
+      <span class="gcp-chip-tier">${c.suffix}</span>
+    </div>
+  `).join("");
 
   container.innerHTML = `
-    <div class="section-label">Credentials</div>
-    <div class="section-title"><span class="gradient-text">13</span> Cloud Certifications</div>
-    <div class="certs-wrapper">
-      ${renderCloud("AWS", certs.AWS, 6)}
-      ${renderCloud("GCP", certs.GCP, 7)}
+    <div class="trophy-eyebrow">
+      <span class="trophy-eyebrow-line"></span>
+      <span class="trophy-eyebrow-text">Proof of work · ${certs.summary.totalCount} active credentials · verified on Credly</span>
+    </div>
+
+    <h2 class="trophy-headline">
+      Thirteen <span class="trophy-gold">AWS</span> certifications.<br>
+      Seven Google Cloud.<br>
+      <em class="trophy-em">All active.</em> All earned.
+    </h2>
+
+    <!-- ─── Golden Jacket centerpiece ──────────────────────────── -->
+    <div class="jacket-block">
+      <div class="jacket-medal" aria-hidden="false">
+        ${goldenJacketSvg}
+        <div class="jacket-medal-grain"></div>
+      </div>
+
+      <div class="jacket-context">
+        <div class="jacket-eyebrow">— A R A R E   A C H I E V E M E N T</div>
+        <h3 class="jacket-title">${certs.goldenJacket.title}</h3>
+        <p class="jacket-body">${certs.goldenJacket.caption}</p>
+
+        <dl class="jacket-meta">
+          <div class="jacket-meta-row">
+            <dt>AWS certifications</dt>
+            <dd>${certs.summary.awsCount} active</dd>
+          </div>
+          <div class="jacket-meta-row">
+            <dt>Google Cloud</dt>
+            <dd>${certs.summary.gcpCount} active</dd>
+          </div>
+          <div class="jacket-meta-row">
+            <dt>Earliest expiration</dt>
+            <dd>${certs.summary.lastExpiration}</dd>
+          </div>
+          <div class="jacket-meta-row">
+            <dt>Verified</dt>
+            <dd>Credly · Continuous</dd>
+          </div>
+        </dl>
+
+        <a class="jacket-verify" href="${certs.goldenJacket.verifyUrl}" target="_blank" rel="noopener">
+          <span>Verify on Credly</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── AWS Trophy Wall by tier ────────────────────────────── -->
+    <div class="trophy-wall">
+      <div class="trophy-wall-header">
+        <div class="trophy-wall-logo">AWS</div>
+        <div class="trophy-wall-divider"></div>
+        <div class="trophy-wall-meta">
+          <span class="trophy-wall-count">${certs.summary.awsCount}×</span>
+          <span class="trophy-wall-suffix">Amazon Web Services</span>
+        </div>
+      </div>
+      <div class="trophy-wall-body">
+        ${awsTierBlocks}
+      </div>
+    </div>
+
+    <!-- ─── GCP section ─────────────────────────────────────────── -->
+    <div class="gcp-section">
+      <div class="gcp-header">
+        <div class="gcp-logo">G C P</div>
+        <div class="gcp-divider"></div>
+        <div class="gcp-meta">
+          <span class="gcp-count">${certs.summary.gcpCount}×</span>
+          <span class="gcp-suffix">Google Cloud · 6 Professional + 1 Associate</span>
+        </div>
+      </div>
+      <div class="gcp-grid">
+        ${gcpChips}
+      </div>
     </div>
   `;
 }
