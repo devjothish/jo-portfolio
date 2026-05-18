@@ -35,7 +35,7 @@ function renderHero() {
         <div class="hero-strip-items">
           <span class="hero-strip-now"><span class="hero-strip-dot"></span>Open to work</span>
           <span class="hero-strip-sep">·</span>
-          <span class="hero-strip-role">AI Engineer · Tampa, FL · Remote</span>
+          <span class="hero-strip-role">AI Engineer · Tallahassee, FL · Open to Relocate</span>
         </div>
         <div class="hero-strip-rule"></div>
       </header>
@@ -58,7 +58,7 @@ function renderHero() {
         </div>
 
         <p class="hero-body">
-          Four years turning enterprise problems into working systems — healthcare claims pipelines, multimodal video at scale, agents that talk to databases. <span class="hero-body-gold">AWS Golden Jacket holder</span> with 13× AWS plus 7× GCP, all active.
+          Four years turning enterprise problems into working systems: healthcare claims pipelines, multimodal video at scale, agents that talk to databases. <span class="hero-body-gold">AWS Golden Jacket holder</span> with 13 active AWS certifications and 3 active Google Cloud Professional credentials.
         </p>
 
         <nav class="hero-actions">
@@ -86,7 +86,7 @@ function renderHero() {
         <ul class="hero-proof-list">
           <li><span class="hero-proof-num">35<i>+</i></span><span class="hero-proof-cap">Engagements</span></li>
           <li><span class="hero-proof-num">13<i>×</i></span><span class="hero-proof-cap">AWS · Golden Jacket</span></li>
-          <li><span class="hero-proof-num">7<i>×</i></span><span class="hero-proof-cap">Google Cloud</span></li>
+          <li><span class="hero-proof-num">3<i>×</i></span><span class="hero-proof-cap">Google Cloud · Professional</span></li>
           <li><span class="hero-proof-num">93<i>%</i></span><span class="hero-proof-cap">Max cost reduction</span></li>
           <li><span class="hero-proof-num">4<i>+</i></span><span class="hero-proof-cap">Years shipping production AI</span></li>
         </ul>
@@ -112,8 +112,8 @@ function renderAbout() {
           <div class="stat-label">Production AI Systems</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number" data-value="20" data-suffix="">0</div>
-          <div class="stat-label">Cloud Certifications</div>
+          <div class="stat-number" data-value="16" data-suffix="">0</div>
+          <div class="stat-label">Active Cloud Certifications</div>
         </div>
         <div class="stat-card">
           <div class="stat-number" data-value="93" data-suffix="%">0</div>
@@ -354,12 +354,12 @@ function renderCertifications() {
     `;
   }).join("");
 
-  // ── GCP cert chips (no badge images) ─────────────────────────────
+  // ── GCP cert chips (active vs archived) ──────────────────────────
   const gcpChips = certs.GCP.map((c, idx) => `
-    <div class="gcp-chip gcp-chip--${c.tier}" style="--chip-delay:${idx * 50}ms">
+    <div class="gcp-chip gcp-chip--${c.tier} ${c.active ? "gcp-chip--active" : "gcp-chip--archived"}" style="--chip-delay:${idx * 50}ms">
       <span class="gcp-chip-dot"></span>
       <span class="gcp-chip-name">${c.name}</span>
-      <span class="gcp-chip-tier">${c.suffix}</span>
+      <span class="gcp-chip-tier">${c.active ? c.suffix : "Archived · Expired"}</span>
     </div>
   `).join("");
 
@@ -383,7 +383,7 @@ function renderCertifications() {
       </div>
 
       <div class="jacket-context">
-        <div class="jacket-eyebrow">— A Rare Achievement</div>
+        <div class="jacket-eyebrow">A Rare Achievement</div>
         <h3 class="jacket-title">${certs.goldenJacket.title}</h3>
         <p class="jacket-body">${certs.goldenJacket.caption}</p>
 
@@ -437,7 +437,7 @@ function renderCertifications() {
         <div class="gcp-divider"></div>
         <div class="gcp-meta">
           <span class="gcp-count">${certs.summary.gcpCount}×</span>
-          <span class="gcp-suffix">Google Cloud · 6 Professional + 1 Associate</span>
+          <span class="gcp-suffix">Active Professional · ${certs.summary.gcpArchived} archived</span>
         </div>
       </div>
       <div class="gcp-grid">

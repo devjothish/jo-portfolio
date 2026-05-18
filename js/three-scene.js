@@ -60,8 +60,8 @@ class NeuralNetworkScene {
     for (let i = 0; i < nodeCount; i++) {
       const material = new THREE.MeshBasicMaterial({
         color: new THREE.Color().lerpColors(
-          new THREE.Color(0x00d4ff),
-          new THREE.Color(0x8b5cf6),
+          new THREE.Color(0xd4af37),
+          new THREE.Color(0x8a6f24),
           Math.random()
         ),
         transparent: true,
@@ -90,7 +90,7 @@ class NeuralNetworkScene {
     // Create edges between nearby nodes
     const maxDist = this.isMobile ? 6 : 5;
     const edgeMaterial = new THREE.LineBasicMaterial({
-      color: 0x00d4ff,
+      color: 0xd4af37,
       transparent: true,
       opacity: 0.06,
     });
@@ -139,7 +139,7 @@ class NeuralNetworkScene {
     geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
 
     const material = new THREE.PointsMaterial({
-      color: 0x00d4ff,
+      color: 0xd4af37,
       size: 0.08,
       transparent: true,
       opacity: 0.3,
