@@ -84,46 +84,13 @@ function renderHero() {
       <footer class="hero-proof">
         <div class="hero-proof-rule"></div>
         <ul class="hero-proof-list">
-          <li><span class="hero-proof-num">35<i>+</i></span><span class="hero-proof-cap">Engagements</span></li>
+          <li><span class="hero-proof-num">25<i>+</i></span><span class="hero-proof-cap">Engagements</span></li>
           <li><span class="hero-proof-num">13<i>×</i></span><span class="hero-proof-cap">AWS · Golden Jacket</span></li>
           <li><span class="hero-proof-num">3<i>×</i></span><span class="hero-proof-cap">Google Cloud · Professional</span></li>
           <li><span class="hero-proof-num">93<i>%</i></span><span class="hero-proof-cap">Max cost reduction</span></li>
           <li><span class="hero-proof-num">4<i>+</i></span><span class="hero-proof-cap">Years shipping production AI</span></li>
         </ul>
       </footer>
-    </div>
-  `;
-}
-
-function renderAbout() {
-  const d = PORTFOLIO_DATA.personal;
-  const container = document.querySelector("#about .section-inner");
-  container.innerHTML = `
-    <div class="section-label">About</div>
-    <div class="section-title">Who I am and <span class="gradient-text">what I do</span></div>
-    <div class="about-grid">
-      <div class="about-text">
-        <p>${d.bio}</p>
-        <p class="cta-highlight" style="color: var(--blue); border-left: 3px solid var(--blue); padding-left: 1rem; margin-top: 1.5rem; font-weight: 500;">${d.cta}</p>
-      </div>
-      <div class="about-stats">
-        <div class="stat-card">
-          <div class="stat-number" data-value="35" data-suffix="+">0</div>
-          <div class="stat-label">Production AI Systems</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" data-value="16" data-suffix="">0</div>
-          <div class="stat-label">Active Cloud Certifications</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" data-value="93" data-suffix="%">0</div>
-          <div class="stat-label">Max Cost Reduction</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" data-value="4" data-suffix="+">0</div>
-          <div class="stat-label">Years Experience</div>
-        </div>
-      </div>
     </div>
   `;
 }
@@ -138,7 +105,7 @@ function renderProjects() {
         <div class="study-rail">
           <div class="study-num">${String(i + 1).padStart(2, "0")}</div>
           <div class="study-rail-line"></div>
-          <div class="study-rail-tag">CASE</div>
+          <div class="study-rail-tag">${p.kind || "CASE"}</div>
         </div>
         <div class="study-body">
           <h3 class="study-name">${p.name}</h3>
@@ -148,12 +115,18 @@ function renderProjects() {
               <span class="study-meta-key">Stack</span>
               <span class="study-meta-val">${p.tech.join(" · ")}</span>
             </div>
+            ${p.metrics.length ? `
             <div class="study-meta-row study-meta-row-metrics">
               <span class="study-meta-key">Impact</span>
               <span class="study-meta-val">
                 ${p.metrics.map(m => `<span class="study-metric"><i class="study-metric-num">${m.value}${m.suffix}</i> <i class="study-metric-cap">${m.label}</i></span>`).join('<span class="study-metric-sep">·</span>')}
               </span>
-            </div>
+            </div>` : ""}
+            ${p.repo ? `
+            <div class="study-meta-row">
+              <span class="study-meta-key">Source</span>
+              <span class="study-meta-val"><a class="study-repo" href="${p.repo}" target="_blank" rel="noopener">${p.repo.replace("https://", "")} ↗</a></span>
+            </div>` : ""}
           </div>
         </div>
       </article>
@@ -164,7 +137,7 @@ function renderProjects() {
     <header class="ed-section-head">
       <div class="ed-eyebrow">
         <span class="ed-eyebrow-line"></span>
-        <span class="ed-eyebrow-text">Selected work · ${projects.length} case studies</span>
+        <span class="ed-eyebrow-text">Selected work · ${projects.length} projects</span>
       </div>
       <h2 class="ed-headline">
         Things I <em>actually</em><br>shipped to production.

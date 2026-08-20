@@ -12,7 +12,7 @@ const PORTFOLIO_DATA = {
     location: "Tallahassee, FL - Open to Relocate",
     github: "https://github.com/devjothish",
     linkedin: "https://linkedin.com/in/jothiswaran",
-    bio: `I've spent the last 4+ years at RevStar turning client problems into working AI systems. Healthcare claims processing, video analysis at scale, agents that talk to databases so people don't have to write SQL, that kind of thing. 35+ engagements across healthcare, fintech, and logistics. I'm also an AWS Golden Jacket holder with 16 active cloud credentials (13 AWS plus 3 Google Cloud Professional) because I like understanding what's running under my code.`,
+    bio: `I've spent four years turning client problems into working AI systems - healthcare claims processing, video analysis at scale, agents that talk to databases so people don't have to write SQL. 25+ discovery and delivery engagements across healthcare, fintech, and legal, and I'm the delivery lead at an AWS Advanced Tier Partner. I'm also an AWS Golden Jacket holder, 13x AWS and 7x Google Cloud certified, because I like understanding what's running under my code.`,
     cta: `I'm looking for my next AI Engineering role. If your team is working on AI and you need someone who's shipped real systems to real users, I'd love to hear about it.`,
   },
 
@@ -22,7 +22,7 @@ const PORTFOLIO_DATA = {
       name: "Healthcare Agentic Mesh",
       shortName: "Agentic Mesh",
       description:
-        "Healthcare claims are messy - dozens of validation steps, routing rules, and edge cases. I built a multi-agent system where 6 specialized agents handle the entire pipeline autonomously, from intake to adjudication, with no human in the loop.",
+        "Healthcare claims are messy - dozens of validation steps, routing rules, and edge cases. I built an agentic pipeline that runs an 8-step autonomous workflow from intake to adjudication, with tool orchestration and recovery when a step fails.",
       tech: [
         "Strands Agents SDK",
         "AWS Bedrock AgentCore",
@@ -32,9 +32,8 @@ const PORTFOLIO_DATA = {
         "Python",
       ],
       metrics: [
-        { label: "Agents Orchestrated", value: 6, suffix: "" },
-        { label: "Processing Time", value: 85, suffix: "% faster" },
-        { label: "Accuracy", value: 97, suffix: "%" },
+        { label: "Autonomous Steps", value: 8, suffix: "" },
+        { label: "Human Handoffs", value: 0, suffix: "" },
       ],
       impact: 95,
       color: "#00D4FF",
@@ -45,7 +44,7 @@ const PORTFOLIO_DATA = {
       name: "Multimodal Video-to-Brief",
       shortName: "Video-to-Brief",
       description:
-        "A client had thousands of brand videos and needed structured briefs for each one. I built a pipeline that watches videos with Amazon Nova Pro, extracts key information, and generates briefs - then fine-tuned Llama 3.1 8B with QLoRA so the whole thing costs almost nothing to run.",
+        "A client had thousands of brand videos and needed structured briefs for each one. I built a pipeline that watches videos with Amazon Nova Pro, extracts key information, and generates briefs - then fine-tuned Llama 3.1 8B with QLoRA across 8x A100s to bring the per-video cost down to half a cent.",
       tech: [
         "Amazon Nova Pro",
         "QLoRA",
@@ -54,9 +53,9 @@ const PORTFOLIO_DATA = {
         "Python",
       ],
       metrics: [
-        { label: "Briefs Generated", value: 3867, suffix: "" },
-        { label: "Cost Reduction", value: 72, suffix: "x" },
-        { label: "Fine-tune Params", value: 0.5, suffix: "%" },
+        { label: "Briefs Generated", value: "3,867", suffix: "" },
+        { label: "Cost per Brief", value: "$0.0051", suffix: "" },
+        { label: "Fine-tune GPUs", value: 8, suffix: "x A100" },
       ],
       impact: 90,
       color: "#8B5CF6",
@@ -76,9 +75,8 @@ const PORTFOLIO_DATA = {
         "Lambda",
       ],
       metrics: [
+        { label: "Latency", value: "8.3s", suffix: " to 1.2s" },
         { label: "Cost Reduction", value: 93, suffix: "%" },
-        { label: "Fast-path Hit Rate", value: 89, suffix: "%" },
-        { label: "Latency", value: 120, suffix: "ms" },
       ],
       impact: 88,
       color: "#10B981",
@@ -100,7 +98,7 @@ const PORTFOLIO_DATA = {
       metrics: [
         { label: "Latency Reduction", value: 70, suffix: "%" },
         { label: "Schema Columns", value: 50, suffix: "+" },
-        { label: "Query Accuracy", value: 94, suffix: "%" },
+        { label: "Queries / Week", value: 300, suffix: "+" },
       ],
       impact: 85,
       color: "#F59E0B",
@@ -121,11 +119,7 @@ const PORTFOLIO_DATA = {
         "Athena",
         "Lake Formation",
       ],
-      metrics: [
-        { label: "Data Sources", value: 25, suffix: "+" },
-        { label: "Search Speed", value: 200, suffix: "ms" },
-        { label: "Users Served", value: 500, suffix: "+" },
-      ],
+      metrics: [],
       impact: 75,
       color: "#EC4899",
       icon: "data",
@@ -144,14 +138,78 @@ const PORTFOLIO_DATA = {
         "WebRTC",
         "LLM Pipeline",
       ],
-      metrics: [
-        { label: "Response Time", value: 800, suffix: "ms" },
-        { label: "Concurrent Calls", value: 50, suffix: "+" },
-        { label: "Uptime", value: 99.5, suffix: "%" },
-      ],
+      metrics: [],
       impact: 70,
       color: "#6366F1",
       icon: "voice",
+    },
+    {
+      id: "agentops-lab",
+      kind: "OSS",
+      name: "AgentOps Lab",
+      shortName: "AgentOps",
+      repo: "https://github.com/devjothish/agentops-lab",
+      description:
+        "You cannot tell whether an agent change helped unless you can see the run it produced. This is a LangGraph multi-agent analyst wired to a framework-agnostic reliability toolkit: every run emits an OpenTelemetry trajectory tree to Postgres, an eval engine scores the finished run, and a Next.js dashboard renders the waterfall so a retry or a critic loop-back is visible rather than inferred.",
+      tech: [
+        "LangGraph",
+        "OpenTelemetry",
+        "Postgres",
+        "DuckDB",
+        "Claude",
+        "Next.js",
+        "Python",
+      ],
+      metrics: [
+        { label: "Tests Green", value: 57, suffix: "" },
+        { label: "Agent Nodes", value: 5, suffix: "" },
+      ],
+      impact: 80,
+      color: "#22D3EE",
+      icon: "mesh",
+    },
+    {
+      id: "rag-refusal-eval",
+      kind: "OSS",
+      name: "RAG Refusal Eval",
+      shortName: "Refusal Eval",
+      repo: "https://github.com/devjothish/rag-refusal-eval",
+      description:
+        "The dangerous RAG failure is not empty retrieval, it is retrieval that returns something topically adjacent and lets the model paraphrase a confident answer that was never in the corpus. This service answers over the Pydantic AI docs and validates every claim against a quote copied character for character out of a retrieved passage; a claim that cannot produce one never leaves the process.",
+      tech: [
+        "Pydantic AI",
+        "Qdrant",
+        "OpenTelemetry",
+        "FastAPI",
+        "Python",
+      ],
+      metrics: [
+        { label: "Indexed Passages", value: "1,591", suffix: "" },
+        { label: "Guardrail", value: "verbatim quote", suffix: "" },
+      ],
+      impact: 78,
+      color: "#F472B6",
+      icon: "sql",
+    },
+    {
+      id: "agentic-rag",
+      kind: "OSS",
+      name: "Agentic RAG with Qdrant and Tavily",
+      shortName: "Agentic RAG",
+      repo: "https://github.com/devjothish/AgenticRAG",
+      description:
+        "A retrieval agent that decides where to look before it looks: indexed embeddings in Qdrant when the answer is in the corpus, a live Tavily web search when it is not. Multi-step agentic retrieval that beats single-shot RAG on questions needing both stored knowledge and current context.",
+      tech: [
+        "LangChain",
+        "Qdrant",
+        "Tavily",
+        "Hugging Face",
+        "Python",
+      ],
+      metrics: [],
+      impact: 70,
+      color: "#A3E635",
+      icon: "data",
     },
   ],
 
@@ -310,14 +368,14 @@ const PORTFOLIO_DATA = {
 
   experience: [
     {
-      role: "Data and AI Engineer - Tech Lead",
+      role: "Lead Data and AI Engineer",
       company: "RevStar Consulting (AWS Advanced Tier Partner)",
       period: "Jun 2025 - Present",
       location: "Tampa, FL (Remote)",
       highlights: [
-        "Ran point on 35+ client engagements - scoping architectures, estimating AWS costs, and building the AI systems myself. RAG pipelines, agentic workflows, fine-tuning - whatever the client needed.",
+        "Ran point on 25+ client engagements - scoping architectures, estimating AWS costs, and building the AI systems myself. RAG pipelines, agentic workflows, fine-tuning - whatever the client needed.",
         "Built an 8-step healthcare claims pipeline where agents handle everything from intake to adjudication. Strands Agents SDK, Bedrock AgentCore, deployed on ECS Fargate.",
-        "Took video processing from $0.37/video down to $0.005 (72x cheaper) by building a multimodal pipeline with Nova Pro. Processed 3,867 brand videos and fine-tuned Llama 3.1 8B on 8x A100s.",
+        "Cut per-video processing cost to $0.0051 by building a multimodal brief pipeline with Nova Pro. Processed 3,867 brand videos and fine-tuned Llama 3.1 8B with QLoRA on 8x A100s.",
         "Latency was 8.3 seconds per transaction - way too slow. Added dual-namespace long-term memory so the agent remembers past work. Got it down to 1.2s and cut costs by 93%.",
         "Non-technical teams needed data answers without writing SQL. Built an agent with Claude Sonnet that handles 50+ column schemas, with injection prevention and PII guardrails baked in.",
       ],
@@ -337,7 +395,7 @@ const PORTFOLIO_DATA = {
     {
       role: "GCP Cloud Engineer",
       company: "Cognizant (CTS)",
-      period: "Mar 2021 - Aug 2023",
+      period: "Jul 2021 - Aug 2023",
       location: "Hyderabad, India",
       highlights: [
         "Teams were spending days spinning up ML infrastructure. Automated it with Terraform, GKE, and BigQuery - setup time dropped 80% across 15+ projects.",
